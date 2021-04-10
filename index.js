@@ -14,8 +14,19 @@ const getFullyVaccinatedPercent = async () => {
   }
 };
 
+const percentToAsciiProgressBar = (percent) => {
+  const emptyBlock = '░';
+  const fullBlock = '▓';
+  const blocks = 20;
+  const fullBlocks = Math.round(percent * blocks);
+  const emptyBlocks = blocks - fullBlocks;
+
+  return `${fullBlock.repeat(fullBlocks)}${emptyBlock.repeat(emptyBlocks)}`;
+};
+
 (async () => {
   const percent = await getFullyVaccinatedPercent();
+  const progressBar = percentToAsciiProgressBar(percent);
 
-  console.log(`${percent * 100}%`);
+  console.log(`${progressBar} ${percent * 100}%`);
 })();
