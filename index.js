@@ -15,5 +15,7 @@ const getFullyVaccinatedPercent = async () => {
 };
 
 (async () => {
-  console.log(await getFullyVaccinatedPercent());
+  const percent = await getFullyVaccinatedPercent();
+
+  console.log(`${percent * 100}%`);
 })();
