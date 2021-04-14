@@ -15,7 +15,7 @@ const getFullyVaccinatedPercent = async () => {
     const html = pageHtml.match(/(?<=Fully vaccinated).*?(?=of the population)/is)[0];
     const percent = html.match(/([\d.]+?)%/)[0];
 
-    return parseFloat(percent) / 100.0;;
+    return parseFloat(percent) / 100.0;
   } catch {
     console.log('Could not scrape percentage');
     return null;
