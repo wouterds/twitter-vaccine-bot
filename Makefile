@@ -22,7 +22,7 @@ build: ${DOCKERFILE}
 		-t ${TAG} .
 
 docker-login:
-	docker login -u ${DOCKER_REGISTRY_USER} -p "${DOCKER_REGISTRY_PASS}"
+	docker login registry.evix.io -u ${DOCKER_REGISTRY_USER} -p "${DOCKER_REGISTRY_PASS}"
 
 push:
 	docker push ${TAG}
