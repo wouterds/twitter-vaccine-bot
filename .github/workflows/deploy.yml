@@ -31,6 +31,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: 'SSH: trust host'
-        run: for ip in $(dig @1.1.1.1 ${DEPLOY_HOST} +short); do ssh-keyscan ${DEPLOY_HOST},$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
+        run: |
+          for ip in $(dig @1.1.1.1 ${DEPLOY_HOST} +short); do \
+            ssh-keyscan ${DEPLOY_HOST},$ip; \
+            ssh-keyscan $ip; \
+          done 2>/dev/null >> ~/.ssh/known_hosts
       - name: 'Docker: deploy containers'
         run: make deploy
