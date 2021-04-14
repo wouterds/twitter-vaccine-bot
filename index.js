@@ -52,5 +52,7 @@ const tweet = async () => {
   }
 };
 
+console.log('Starting crons');
+
 // Call tweet() every day at 11:00
 cron.schedule('00 11 * * *', tweet);
