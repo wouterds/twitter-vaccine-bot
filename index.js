@@ -1,7 +1,3 @@
-// Set timezone
-process.env.TZ = 'Europe/Brussels';
-
-// Load .env
 require('dotenv').config();
 
 const fetch = require('node-fetch');
@@ -32,28 +28,25 @@ const percentToAsciiProgressBar = (percent) => {
   return `${fullBlock.repeat(fullBlocks)}${emptyBlock.repeat(emptyBlocks)}`;
 };
 
-const composeTweet = async () => {
+let lastPercent = null;
+const postTweet = async () => {
   const percent = await getFullyVaccinatedPercent();
   if (!percent) {
     return;
   }
 
-  const progressBar = percentToAsciiProgressBar(percent);
-
-  return `${progressBar} ${percent * 100}%`;
-};
-
-const logTweet = async () => {
-  const tweet = await composeTweet();
-
-  console.log(tweet);
-};
-
-const postTweet = async () => {
-  const tweet = await composeTweet();
-  if (!tweet) {
+  if (!lastPercent) {
+    lastPercent = percent;
     return;
   }
+
+  const tweet = `${percentToAsciiProgressBar(percent)} ${percent * 100}%`;
+  console.log(tweet);
+
+  if (percent === lastPercent) {
+    return;
+  }
+  percent = lastPercent;
 
   const twitter = new Twitter({
     consumer_key: process.env.TWITTER_API_KEY,
@@ -70,10 +63,4 @@ const postTweet = async () => {
   }
 };
 
-console.log('Starting crons');
-
-// Call postTweet() every day at 11:00
-cron.schedule('00 11 * * *', postTweet);
-
-// Post progress every 5 minutes
-cron.schedule('*/5 * * * *', logTweet);
+cron.schedule('00 * * * *', postTweet);
