@@ -1,5 +1,9 @@
+// Set timezone
 process.env.TZ = 'Europe/Brussels';
+
+// Load .env
 require('dotenv').config();
+
 const fetch = require('node-fetch');
 const cron = require('node-cron');
 const Twitter = require('twitter');
@@ -47,4 +51,5 @@ const tweet = async () => {
   }
 };
 
+// Call tweet() every day at 11:00
 cron.schedule('00 11 * * *', tweet);
