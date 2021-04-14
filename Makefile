@@ -16,9 +16,10 @@ node_modules: yarn.lock
 
 build: ${DOCKERFILE}
 	docker build -f ${DOCKERFILE} \
-		--build-arg PORT=${PORT} \
-		--build-arg APP_HOST=${APP_HOST} \
-		--build-arg API_HOST=${API_HOST} \
+		--build-arg TWITTER_API_KEY=${TWITTER_API_KEY} \
+		--build-arg TWITTER_API_SECRET=${TWITTER_API_SECRET} \
+		--build-arg TWITTER_ACCESS_TOKEN_KEY=${TWITTER_ACCESS_TOKEN_KEY} \
+		--build-arg TWITTER_ACCESS_TOKEN_SECRET=${TWITTER_ACCESS_TOKEN_SECRET} \
 		-t ${TAG} .
 
 docker-login:
