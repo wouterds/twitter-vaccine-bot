@@ -1,3 +1,4 @@
+process.env.TZ = 'Europe/Brussels';
 require('dotenv').config();
 const fetch = require('node-fetch');
 const cron = require('node-cron');
