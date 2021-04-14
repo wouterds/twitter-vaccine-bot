@@ -43,6 +43,12 @@ const composeTweet = async () => {
   return `${progressBar} ${percent * 100}%`;
 };
 
+const logTweet = async () => {
+  const tweet = await composeTweet();
+
+  console.log(tweet);
+};
+
 const postTweet = async () => {
   const tweet = await composeTweet();
   if (!tweet) {
@@ -68,3 +74,6 @@ console.log('Starting crons');
 
 // Call postTweet() every day at 11:00
 cron.schedule('00 11 * * *', postTweet);
+
+// Post progress every 5 minutes
+cron.schedule('*/5 * * * *', logTweet);
