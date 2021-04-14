@@ -1,0 +1,31 @@
+name: 'deploy'
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+      TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+      TWITTER_ACCESS_TOKEN_KEY: ${{ secrets.TWITTER_ACCESS_TOKEN_KEY }}
+      TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: 'Docker: build images'
+        run: make build
+      - name: 'Docker: authenticate with registry'
+        run: make docker-login
+      - name: 'Docker: upload images'
+        run: make push
+      - name: 'SSH: configure agent'
+        uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: 'SSH: trust host'
+        run: for ip in $(dig @1.1.1.1 ${DEPLOY_HOST} +short); do ssh-keyscan ${DEPLOY_HOST},$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
+      - name: 'Docker: deploy containers'
+        run: make deploy
