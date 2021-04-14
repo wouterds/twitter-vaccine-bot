@@ -3,7 +3,7 @@ WORKDIR /code
 
 COPY ./package.json ./package.json
 COPY ./yarn.lock ./yarn.lock
-COPY ./index.js index.js
+COPY ./index.js ./index.js
 
 RUN yarn --pure-lockfile --production
 
