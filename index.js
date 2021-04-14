@@ -28,9 +28,9 @@ const percentToAsciiProgressBar = (percent) => {
 };
 
 const tweet = async () => {
-  // const percent = await getFullyVaccinatedPercent();
-  // const progressBar = percentToAsciiProgressBar(percent);
-  // const tweet = `${progressBar} ${percent * 100}%`;
+  const percent = await getFullyVaccinatedPercent();
+  const progressBar = percentToAsciiProgressBar(percent);
+  const tweet = `${progressBar} ${percent * 100}%`;
 
   const twitter = new Twitter({
     consumer_key: process.env.TWITTER_API_KEY,
@@ -38,9 +38,12 @@ const tweet = async () => {
     bearer_token: process.env.TWITTER_BEARER_TOKEN
   });
 
-  const response = await twitter.post('statuses/update', { status: 'Hello world!' }).catch();
-
-  console.log(response);
+  try {
+    const response = await twitter.post('statuses/update', { status: tweet });
+    console.log(response);
+  } catch (e) {
+    console.error(e);
+  }
 };
 
-cron.schedule('* * * * *', tweet);
+cron.schedule('00 11 * * *', tweet);
