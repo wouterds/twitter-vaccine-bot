@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fetch = require('node-fetch');
 const cron = require('node-cron');
+const Twitter = require('twitter');
 
 const getFullyVaccinatedPercent = async () => {
   try {
@@ -27,11 +28,19 @@ const percentToAsciiProgressBar = (percent) => {
 };
 
 const tweet = async () => {
-  const percent = await getFullyVaccinatedPercent();
-  const progressBar = percentToAsciiProgressBar(percent);
-  const tweet = `${progressBar} ${percent * 100}%`;
+  // const percent = await getFullyVaccinatedPercent();
+  // const progressBar = percentToAsciiProgressBar(percent);
+  // const tweet = `${progressBar} ${percent * 100}%`;
 
-  console.log(tweet);
+  const twitter = new Twitter({
+    consumer_key: process.env.TWITTER_API_KEY,
+    consumer_secret: process.env.TWITTER_API_SECRET,
+    bearer_token: process.env.TWITTER_BEARER_TOKEN
+  });
+
+  const response = await twitter.post('statuses/update', { status: 'Hello world!' }).catch();
+
+  console.log(response);
 };
 
 cron.schedule('* * * * *', tweet);
