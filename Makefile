@@ -3,7 +3,7 @@ PWD = $(shell pwd)
 DOCKER_COMPOSE = ./docker-compose.yml
 DOCKERFILE = ./Dockerfile
 
-TAG = registry.evix.io/vaccine-twitter-bot
+TAG = registry.evix.io/twitter-vaccine-bot
 
 all: build
 

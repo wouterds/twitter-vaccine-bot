@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   node:
-    image: registry.evix.io/vaccine-twitter-bot
-    container_name: vaccine-twitter-bot
+    image: registry.evix.io/twitter-vaccine-bot
+    container_name: twitter-vaccine-bot
     restart: unless-stopped
     mem_limit: 32mb
