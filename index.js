@@ -34,6 +34,10 @@ const percentToAsciiProgressBar = (percent) => {
 
 const tweet = async () => {
   const percent = await getFullyVaccinatedPercent();
+  if (!percent) {
+    return;
+  }
+
   const progressBar = percentToAsciiProgressBar(percent);
   const tweet = `${progressBar} ${percent * 100}%`;
 
