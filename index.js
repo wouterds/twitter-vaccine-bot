@@ -32,14 +32,22 @@ const percentToAsciiProgressBar = (percent) => {
   return `${fullBlock.repeat(fullBlocks)}${emptyBlock.repeat(emptyBlocks)}`;
 };
 
-const tweet = async () => {
+const composeTweet = async () => {
   const percent = await getFullyVaccinatedPercent();
   if (!percent) {
     return;
   }
 
   const progressBar = percentToAsciiProgressBar(percent);
-  const tweet = `${progressBar} ${percent * 100}%`;
+
+  return `${progressBar} ${percent * 100}%`;
+};
+
+const postTweet = async () => {
+  const tweet = await composeTweet();
+  if (!tweet) {
+    return;
+  }
 
   const twitter = new Twitter({
     consumer_key: process.env.TWITTER_API_KEY,
@@ -58,5 +66,5 @@ const tweet = async () => {
 
 console.log('Starting crons');
 
-// Call tweet() every day at 11:00
-cron.schedule('00 11 * * *', tweet);
+// Call postTweet() every day at 11:00
+cron.schedule('00 11 * * *', postTweet);
