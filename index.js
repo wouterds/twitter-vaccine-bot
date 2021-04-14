@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const cron = require('node-cron');
 
 const getFullyVaccinatedPercent = async () => {
   try {
@@ -24,9 +25,12 @@ const percentToAsciiProgressBar = (percent) => {
   return `${fullBlock.repeat(fullBlocks)}${emptyBlock.repeat(emptyBlocks)}`;
 };
 
-(async () => {
+const tweet = async () => {
   const percent = await getFullyVaccinatedPercent();
   const progressBar = percentToAsciiProgressBar(percent);
+  const tweet = `${progressBar} ${percent * 100}%`;
 
-  console.log(`${progressBar} ${percent * 100}%`);
-})();
+  console.log(tweet);
+};
+
+cron.schedule('* * * * *', tweet);
