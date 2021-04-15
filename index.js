@@ -63,4 +63,9 @@ const postTweet = async () => {
   }
 };
 
-cron.schedule('00 * * * *', postTweet);
+(async () => {
+  console.log('Twitter bot is running!');
+  await postTweet();
+
+  cron.schedule('00 * * * *', postTweet);
+})();
