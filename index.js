@@ -30,7 +30,18 @@ const percentToAsciiProgressBar = (percent) => {
 
 let lastPercent = null;
 const postTweet = async () => {
-  const percent = await getFullyVaccinatedPercent();
+  let percent = await getFullyVaccinatedPercent();
+  if (!percent) {
+    for (let i = 1; i <= 3; i++) {
+      await new Promise(resolve => setTimeout(resolve, 1000 * i));
+      percent = await getFullyVaccinatedPercent();
+
+      if (percent) {
+        break;
+      }
+    }
+  }
+
   if (!percent) {
     return;
   }
