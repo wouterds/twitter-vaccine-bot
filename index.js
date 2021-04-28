@@ -42,22 +42,25 @@ const postTweet = async () => {
     }
   }
 
+  // no percent?
   if (!percent) {
     return;
   }
 
+  // didn't fetch percent yet, can't compare diff
   if (!lastPercent) {
     lastPercent = percent;
     return;
   }
 
-  const tweet = `${percentToAsciiProgressBar(percent)} ${Math.round(percent * 10000) / 100}%`;
-  console.log(tweet);
-
+  // didn't already tweet this?
   if (percent.toFixed(2) === lastPercent.toFixed(2)) {
     return;
   }
   percent = lastPercent;
+
+  const tweet = `${percentToAsciiProgressBar(percent)} ${Math.round(percent * 10000) / 100}%`;
+  console.log(tweet);
 
   const twitter = new Twitter({
     consumer_key: process.env.TWITTER_API_KEY,
