@@ -54,7 +54,7 @@ const postTweet = async () => {
   const tweet = `${percentToAsciiProgressBar(percent)} ${Math.round(percent * 10000) / 100}%`;
   console.log(tweet);
 
-  if (percent === lastPercent) {
+  if (percent.toFixed(2) === lastPercent.toFixed(2)) {
     return;
   }
   percent = lastPercent;
