@@ -4,6 +4,13 @@ const fetch = require('node-fetch');
 const cron = require('node-cron');
 const Twitter = require('twitter');
 
+const twitter = new Twitter({
+  consumer_key: process.env.TWITTER_API_KEY,
+  consumer_secret: process.env.TWITTER_API_SECRET,
+  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+});
+
 const getFullyVaccinatedPercent = async () => {
   try {
     const response = await fetch('https://covid-vaccinatie.be/en');
@@ -47,28 +54,31 @@ const postTweet = async () => {
     return;
   }
 
-  // didn't fetch percent yet, can't compare diff
-  if (!lastPercent) {
-    lastPercent = percent;
+  // get last tweet
+  let lastPercent = null;
+  try {
+    const response = await twitter.get('statuses/user_timeline', { screen_name: 'bevaccinecount', count: 1 });
+    if (!response) {
+      return;
+    }
+
+    const tweet = response[0].text;
+    lastPercent = parseFloat(tweet.split(' ')[1].replace('%', '')) / 100;
+  } catch (e) {
+    console.error(e);
+  }
+
+  // already tweeted percent?
+  if (Math.round(percent * 1000) === Math.round(lastPercent * 1000)) {
+    console.log('same percent not tweeting');
     return;
   }
 
-  // didn't already tweet this?
-  if (percent.toFixed(2) === lastPercent.toFixed(2)) {
-    return;
-  }
-  percent = lastPercent;
-
+  // build tweet
   const tweet = `${percentToAsciiProgressBar(percent)} ${Math.round(percent * 10000) / 100}%`;
   console.log(tweet);
 
-  const twitter = new Twitter({
-    consumer_key: process.env.TWITTER_API_KEY,
-    consumer_secret: process.env.TWITTER_API_SECRET,
-    access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
-  });
-
+  // tweet
   try {
     const response = await twitter.post('statuses/update', { status: tweet });
     console.log(response);
